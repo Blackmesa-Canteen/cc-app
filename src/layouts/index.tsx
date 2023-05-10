@@ -19,6 +19,7 @@ import {
 
 import OrderGeneration from "@/components/OrderGeneration";
 import MyAccount from "@/components/MyAccount";
+import DesignToolSideBar from "@/components/DesignToolSideBar";
 
 const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const router = useRouter();
@@ -82,6 +83,7 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
             <ShoppingCart />
             <OrderGeneration />
             <EditorSideBar />
+            <DesignToolSideBar />
             {children}
             <TopBar />
           </Box>
