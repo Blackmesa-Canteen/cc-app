@@ -28,6 +28,7 @@ import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { updateBorderTileQty } from "@/store/reducer/areaTileQtySlice";
 import { useRouter } from "next/router";
+import EditorDesignName from "@/components/NavBar/EditorDesignName";
 
 const FileBoard = () => {
   const dispatch = useDispatch();
@@ -78,7 +79,8 @@ const FileBoard = () => {
 
   return (
     <Box>
-      <Flex align="center" justify="flex-start" gap="3px">
+      <EditorDesignName />
+      <Flex align="center" justify="flex-start" gap="10px">
         <Popover isOpen={isSavePopoverOpen} onClose={handleSaveClose}>
           <PopoverTrigger>
             <IconButton
@@ -109,7 +111,8 @@ const FileBoard = () => {
         <Button
           variant="shareBtn"
           marginLeft="2px"
-          size="sm"
+          size="xs"
+          fontSize="sm"
           onClick={loginState ? handleCreateTemplateOpen : handleLoginModalOpen}
           data-testid="share-btn"
         >

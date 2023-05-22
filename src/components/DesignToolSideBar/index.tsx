@@ -18,7 +18,7 @@ import {
 import FileBoard from "@/components/DesignToolSideBar/FileBoard";
 import { RiArrowGoBackLine, RiArrowGoForwardLine } from "react-icons/ri";
 import { BsArrowCounterclockwise } from "react-icons/bs";
-import { switchPaintBucket, switchSideBar } from "@/store/reducer/buttonToggleSlice";
+import { switchPaintBucket, switchRuler, switchSideBar } from "@/store/reducer/buttonToggleSlice";
 import { ActionCreators } from "redux-undo";
 import { useStoreSelector } from "@/store/hooks";
 import { useDispatch } from "react-redux";
@@ -27,8 +27,8 @@ import ColorBoard from "@/components/TopBar/ColorBoard";
 import BorderSvg from "@/assets/svg/TopBarSvg/border.svg";
 import { FaCaretUp } from "react-icons/fa";
 import { getCourtNameString, updateBorderLength } from "@/store/reducer/courtSpecDataSlice";
-import { useState } from "react";
-import { resetAll } from "@/store/reducer/canvasControlSlice";
+import React, { useState } from "react";
+import { changeZoomScale, dragSwitch, resetAll } from "@/store/reducer/canvasControlSlice";
 import { updateBorderTileQty } from "@/store/reducer/areaTileQtySlice";
 
 const DesignToolSideBar = () => {
@@ -43,6 +43,8 @@ const DesignToolSideBar = () => {
   const borderLength = selectedCourt.borderLength;
   const [sliderValue, setSliderValue] = useState(borderLength / 1000);
   const [useUserId, setUserId] = useState(userData.userId);
+  const [ruler, setRuler] = useState("RULER ON");
+  const { zoomScale } = useStoreSelector((state) => state.canvasControl);
 
   const handleChange = (val: number) => {
     dispatch(resetAll());
@@ -71,6 +73,25 @@ const DesignToolSideBar = () => {
     dispatch(ActionCreators.jumpToPast(0));
   };
 
+  const handleRulerState = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRuler(e.target.checked ? "RULER ON" : "RULER OFF");
+    dispatch(switchRuler(e.target.checked));
+  };
+
+  // changeZoomScale Payload: true -> Zoom in, false -> Zoom out
+  const handleZoomIn = () => {
+    dispatch(changeZoomScale(true));
+    dispatch(dragSwitch(true));
+  };
+
+  const handleZoomOut = () => {
+    dispatch(changeZoomScale(false));
+  };
+
+  const handleResetZoom = () => {
+    dispatch(resetAll());
+  };
+
   const isThingsToUndo = useStoreSelector((state) => state.tile.past).length;
   const isThingsToRedo = useStoreSelector((state) => state.tile.future).length;
   const isThingsToReset = isThingsToUndo;
@@ -90,6 +111,17 @@ const DesignToolSideBar = () => {
           <FileBoard />
           <Divider orientation="horizontal" />
           <Box>
+            <Text
+              m={2}
+              as="span"
+              color="brand.primary"
+              fontSize="md"
+              fontWeight="bold"
+              lineHeight="19px"
+              _groupHover={{ color: "fontcolor.primary" }}
+            >
+              {"Design Tools"}
+            </Text>
             <Flex align="center" justify="flex-start" gap="3px">
               <Tooltip
                 hasArrow
@@ -197,9 +229,10 @@ const DesignToolSideBar = () => {
                   color="brand.primary"
                   border="none"
                   marginTop={3}
+                  marginBottom={3}
                   boxShadow="none"
                 >
-                  <FaCaretUp size={30} />
+                  <FaCaretUp size={25} />
                 </SliderThumb>
               </Slider>
               <Text fontSize="lg" color="brand.primary">
@@ -207,7 +240,20 @@ const DesignToolSideBar = () => {
               </Text>
             </Flex>
           </Box>
-          <Divider orientation="horizontal" />
+          <Divider orientation="horizontal" marginTop={3} />
+          <Box>
+            <Text
+              m={2}
+              as="span"
+              color="brand.primary"
+              fontSize="md"
+              fontWeight="bold"
+              lineHeight="19px"
+              _groupHover={{ color: "fontcolor.primary" }}
+            >
+              {"Display Adjustment"}
+            </Text>
+          </Box>
         </Flex>
       </Box>
     </Box>
